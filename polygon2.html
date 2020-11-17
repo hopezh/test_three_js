@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rotating cube</title>
+</head>
+<body style='background-color: rgb(20, 20, 20);'>
+
+    <script src="./build/three.min.js"></script>
+
+    <script>
+        var scene = new THREE.Scene();
+
+        var cam = new THREE.PerspectiveCamera(75, 
+                                              window.innerWidth/window.innerHeight,
+                                              1, 
+                                              10000);
+        
+        var renderer = new THREE.WebGLRenderer();
+
+        renderer.setSize(window.innerWidth, 
+                         window.innerHeight);
+
+        document.body.appendChild(renderer, domElement);
+
+        var geom = new THREE.BoxGeometry(700, 700, 700, 10, 10, 10);
+
+        var mat = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+
+        var cube = new THREE.Mesh(geom, mat);
+
+        scene.add(cube);
+
+        cam.position.z = 1000;
+        
+        function render(){
+            requestAnimationFrame(render);
+            cube.rotation.x += 0.01; 
+            cube.rotation.y += 0.01; 
+            renderer.render(scene, cam);
+        };
+
+        render(); 
+
+    </script>
+    
+</body>
+</html>
