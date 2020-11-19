@@ -24,20 +24,27 @@
         // for local development
         import * as THREE from '../build/three.module.js';
         import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+        import Stats from "../jsm/libs/stats.module.js";
 
         // // for online deployment
         // import * as THREE from 'https://threejs.org/build/three.module.js';          
         // import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
 
-        // scene
+        // create scene
         var scene = new THREE.Scene();
 
-        // camera
-        var cam = new THREE.PerspectiveCamera(75, 
-                                              window.innerWidth / window.innerHeight, 
-                                              0.1, 
-                                              1000);
-                        
+        // add camera
+        var camera = new THREE.PerspectiveCamera(75, 
+                                                 window.innerWidth / window.innerHeight, 
+                                                 0.1, 
+                                                 1000);
+
+        // add light
+        var light = new THREE.DirectionalLight();
+        light.position.set(2, 2, 10);
+        scene.add(light);                                      
+
+        // create renderer 
         var renderer = new THREE.WebGLRenderer( { antialias: true } );
 
         renderer.setSize(window.innerWidth, 
@@ -45,62 +52,128 @@
         
         document.body.appendChild(renderer.domElement); 
 
-        window.addEventListener( 'resize', function()
-        {
-            var width = window.innerWidth;
-            var height = window.innerHeight; 
-            renderer.setSize( width, height ); 
-            cam.aspect = width / height; 
-            cam.updateProjectionMatrix(); 
-        }); 
-
         // controls
-        var controls = new OrbitControls( cam, renderer.domElement ); 
+        var controls = new OrbitControls( camera, renderer.domElement ); 
 
-        // create a geometry
+        // create a 3d matrix
+        // var matrix_x = Array(3).fill(Array(3).fill(Array(3).fill( Math.random() * 10 ))); 
+        // var matrix_y = Array(3).fill(Array(3).fill(Array(3).fill( Math.random() * 10 ))); 
+        // var matrix_z = Array(3).fill(Array(3).fill(Array(3).fill( Math.random() * 10 ))); 
+        // console.table(matrix_x[0][0]);
+        // console.table(matrix_y[0][0]);
+        // console.table(matrix_z[0][0]);
+
+        // var geoms = []; 
+        // var i;
+        // var j; 
+        // var k;
+        // for (i=0; i < 3; i++)
+        // {
+        //     for (j=0; j < 3; j++)
+        //     {
+        //         for (k=0; k < 3; k++)
+        //         {
+        //             var box = new THREE.BoxGeometry( Math.random(), Math.random(), Math.random() ); 
+        //             geoms.push(box); 
+        //         };
+        //     };
+        // }; 
+
+        // create geometry
         var geom = new THREE.BoxGeometry( 1, 1, 1 );
         var cubeMat = 
         [
             new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, wireframe: true } ), 
-            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, wireframe: true } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide } ), 
             new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, wireframe: true } ), 
             new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide } ), 
-            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide } ), 
             new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide } ), 
         ]
     
         // create a material, or color 
         // var mat = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: false } ); 
         var cube = new THREE.Mesh( geom, cubeMat );
-        
         scene.add( cube ); 
 
-        cam.position.z = 3; 
+        camera.position.z = 3; 
 
-        // game logic
-        var update = function()
-        {
+        //--- monitor change in window size
+        window.addEventListener( 
+            'resize', 
+            function()
+                {
+                    var width = window.innerWidth;
+                    var height = window.innerHeight; 
+                    renderer.setSize( width, height ); 
+                    camera.aspect = width / height; 
+                    camera.updateProjectionMatrix(); 
+                    render(); 
+                }, 
+                false
+        ); 
+
+        //---- listen to mouse hover movement
+        // renderer.domElement.addEventListener("mousemove", onMouseMove, false);
+
+        // const raycaster = new THREE.Raycaster();
+        // let activeFaceIndex = 0;
+
+        // function onMouseMove(event){
+        //     raycaster.setFromCamera(
+        //         {
+        //         x:  (event.clientX / renderer.domElement.clientWidth ) * 2 - 1,
+        //         y: -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
+        //         },
+        //         camera
+        //     );
+
+        //     const intersects = raycaster.intersectObject(cube, false);
+
+        //     if (intersects.length > 0) {
+        //         if (
+        //             intersects[0].face.materialIndex !== activeFaceIndex &&
+        //             activeFaceIndex !== -1
+        //             )
+        //         {
+        //         cubeMat[activeFaceIndex].color.setHex(0x00ff00);
+        //         }
+        //         activeFaceIndex = intersects[0].face.materialIndex;
+        //         cubeMat[activeFaceIndex].color.setHex(0xff0000);
+        //     } else {
+        //         if (activeFaceIndex !== -1) {
+        //             cubeMat[activeFaceIndex].color.setHex(0x00ff00);
+        //         }
+        //         activeFaceIndex = -1;
+        //     }
+        // }
+
+        //---- define update
+        var update = function(){
             // cube.rotation.x += 0.01; 
             // cube.rotation.y += 0.005; 
             // cube.position.x += 0.001;
         }; 
 
-        // draw scene
-        var render = function()
-        {
-            renderer.render(scene, cam); 
+        //---- define render scene
+        var render = function(){
+            renderer.render(scene, camera); 
         };
 
-        // run game loop -> update, render, repeat
-        var GameLoop = function()
-        {
-            requestAnimationFrame(GameLoop); 
+        //---- get status 
+        var stats = Stats(); 
+        document.body.appendChild(stats.dom);
 
+        //---- define animation -> update, render, repeat
+        var animate = function(){
+            requestAnimationFrame(animate); 
             update();
             render();
+            stats.update(); 
         };
 
-        GameLoop();
+        //---- run animation
+        animate();
 
     </script>
 
