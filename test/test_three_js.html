@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>three.js webgl - orbit controls</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <style>
+        body {
+            background-color: #ccc;
+            color: #000;
+        }
+
+        a {
+            color: #f00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script type="module">
+        // for local development
+        import * as THREE from '../build/three.module.js';
+        import { OrbitControls } from '../jsm/controls/OrbitControls.js';
+
+        // // for online deployment
+        // import * as THREE from 'https://threejs.org/build/three.module.js';          
+        // import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
+
+        // scene
+        var scene = new THREE.Scene();
+
+        // camera
+        var cam = new THREE.PerspectiveCamera(75, 
+                                              window.innerWidth / window.innerHeight, 
+                                              0.1, 
+                                              1000);
+                        
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+
+        renderer.setSize(window.innerWidth, 
+                         window.innerHeight); 
+        
+        document.body.appendChild(renderer.domElement); 
+
+        window.addEventListener( 'resize', function()
+        {
+            var width = window.innerWidth;
+            var height = window.innerHeight; 
+            renderer.setSize( width, height ); 
+            cam.aspect = width / height; 
+            cam.updateProjectionMatrix(); 
+        }); 
+
+        // controls
+        var controls = new OrbitControls( cam, renderer.domElement ); 
+
+        // create a geometry
+        var geom = new THREE.BoxGeometry( 1, 1, 1 );
+        var cubeMat = 
+        [
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, wireframe: true } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, wireframe: true } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, wireframe: true } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide, } ), 
+            new THREE.MeshBasicMaterial( { color: Math.random() * 0xff0000, side: THREE.DoubleSide } ), 
+        ]
+    
+        // create a material, or color 
+        // var mat = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: false } ); 
+        var cube = new THREE.Mesh( geom, cubeMat );
+        
+        scene.add( cube ); 
+
+        cam.position.z = 3; 
+
+        // game logic
+        var update = function()
+        {
+            // cube.rotation.x += 0.01; 
+            // cube.rotation.y += 0.005; 
+            // cube.position.x += 0.001;
+        }; 
+
+        // draw scene
+        var render = function()
+        {
+            renderer.render(scene, cam); 
+        };
+
+        // run game loop -> update, render, repeat
+        var GameLoop = function()
+        {
+            requestAnimationFrame(GameLoop); 
+
+            update();
+            render();
+        };
+
+        GameLoop();
+
+    </script>
+
+</body>
+</html>
