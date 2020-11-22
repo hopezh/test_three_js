@@ -81,9 +81,10 @@
 		</style>
 	</head>
 
-	<body style="background-color:rgb(20, 20, 20);">
+	
+	<body style="background-color:rgb(0, 0, 0);">
 
-		<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> css3d - periodic table.</div>
+		<div id="info"> <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> css3d - periodic table.</div>
 		<div id="container"></div>
 		<div id="menu">
 			<button id="table">TABLE</button>
@@ -99,12 +100,13 @@
 			// import { TrackballControls } from './jsm/controls/TrackballControls.js';
 			// import { CSS3DRenderer, CSS3DObject } from './jsm/renderers/CSS3DRenderer.js';
 
-			import * as THREE 					  from 'https://threejs.org/build/three.module.js'; 
-			import { TWEEN } 					  from 'https://threejs.org/examples/jsm/libs/tween.module.min.js';
-			import { TrackballControls } 		  from 'https://threejs.org/examples/jsm/controls/TrackballControls.js';
+			import * as THREE from 'https://threejs.org/build/three.module.js'; 
+			import { TWEEN } from 'https://threejs.org/examples/jsm/libs/tween.module.min.js';
+			import { TrackballControls } from 'https://threejs.org/examples/jsm/controls/TrackballControls.js';
 			import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';
 
 			const table = [
+				// "symbol", "full name", "atomic weight", column in the table, row in the table 
 				"H", "Hydrogen 氫", "1.00794", 1, 1,
 				"He", "Helium 氦", "4.002602", 18, 1,
 				"Li", "Lithium 鋰", "6.941", 1, 2,
@@ -247,7 +249,12 @@
 
 					const element = document.createElement( 'div' );
 					element.className = 'element';
-					element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+					element.style.backgroundColor = 'rgba('
+												    + (Math.random()*255) + ','
+												    + (Math.random()*255) + ','
+												    + (Math.random()*255) + ','
+												    + (Math.random() * 0.5 + 0.25)  
+												    + ')';
 
 					const number = document.createElement( 'div' );
 					number.className = 'number';
@@ -416,30 +423,20 @@
 			}
 
 			function onWindowResize() {
-
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
-
 				renderer.setSize( window.innerWidth, window.innerHeight );
-
 				render();
-
 			}
 
 			function animate() {
-
 				requestAnimationFrame( animate );
-
 				TWEEN.update();
-
 				controls.update();
-
 			}
 
 			function render() {
-
 				renderer.render( scene, camera );
-
 			}
 
 		</script>
