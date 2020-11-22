@@ -91,6 +91,7 @@
 			<button id="sphere">SPHERE</button>
 			<button id="helix">HELIX</button>
 			<button id="grid">GRID</button>
+			<button id="random">RANDOM</button>
 		</div>
 
 		<script type="module">
@@ -105,6 +106,7 @@
 			import { TrackballControls } from 'https://threejs.org/examples/jsm/controls/TrackballControls.js';
 			import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';
 
+			
 			const table = [
 				// "symbol", "full name", "atomic weight", column in the table, row in the table 
 				"H", "Hydrogen 氫", "1.00794", 1, 1,
@@ -231,66 +233,71 @@
 			let controls;
 
 			const objects = [];
-			const targets = { table: [], sphere: [], helix: [], grid: [] };
+			const targets = { table: [], sphere: [], helix: [], grid: [], random: [] };
 
 			init();
 			animate();
 
 			function init() {
 
-				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
-				camera.position.z = 3000;
+				camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.1, 1000000 );
+				camera.position.z = 5000;
 
 				scene = new THREE.Scene();
 
-				// table
-
+				// init elements 
 				for ( let i = 0; i < table.length; i += 5 ) {
 
 					const element = document.createElement( 'div' );
-					element.className = 'element';
+					element.className = 'element'; 
 					element.style.backgroundColor = 'rgba('
-												    + (Math.random()*255) + ','
-												    + (Math.random()*255) + ','
-												    + (Math.random()*255) + ','
-												    + (Math.random() * 0.5 + 0.25)  
-												    + ')';
+													+ (Math.random()*255) + ','
+													+ (Math.random()*255) + ','
+													+ (Math.random()*255) + ','
+													+ (Math.random() * 0.5 + 0.25)  
+													+ ')';
 
 					const number = document.createElement( 'div' );
-					number.className = 'number';
-					number.textContent = ( i / 5 ) + 1;
-					element.appendChild( number );
+					number.className = 'number'; 
+					number.textContent = (i/5)+1;
+					element.appendChild( number ); 
 
-					const symbol = document.createElement( 'div' );
-					symbol.className = 'symbol';
-					symbol.textContent = table[ i ];
-					element.appendChild( symbol );
+					const symbol = document.createElement( 'div' ); 
+					symbol.className = 'symbol'; 
+					symbol.textContent = table[i]; 
+					element.appendChild( symbol ); 
 
-					const details = document.createElement( 'div' );
-					details.className = 'details';
-					details.innerHTML = table[ i + 1 ] + '<br>' + table[ i + 2 ];
-					element.appendChild( details );
+					const details = document.createElement( 'div'); 
+					details.className = 'details'; 
+					details.innerHTML = table[i+1] + '<br>' + table[i+2];
+					element.appendChild( details ); 
 
-					const objectCSS = new CSS3DObject( element );
-					objectCSS.position.x = Math.random() * 4000 - 2000;
-					objectCSS.position.y = Math.random() * 4000 - 2000;
-					objectCSS.position.z = Math.random() * 4000 - 2000;
-					scene.add( objectCSS );
+					// convert each element to a CSS3DObject and ...
+					// ... init the position for all element at the world origin 
+					const objectCSS = new CSS3DObject( element ); 
+					objectCSS.position.x = 0;
+					objectCSS.position.y = 0;
+					objectCSS.position.z = 0;
 
-					objects.push( objectCSS );
+					scene.add( objectCSS ); 
 
-					//
+					objects.push( objectCSS ); 
+				}
 
-					const object = new THREE.Object3D();
+				//table layout 
+				for ( let i = 0; i < table.length; i += 5  ) {
+					const object = new THREE.Object3D(); 
+
 					object.position.x = ( table[ i + 3 ] * 140 ) - 1330;
 					object.position.y = - ( table[ i + 4 ] * 180 ) + 990;
 
 					targets.table.push( object );
-
 				}
 
-				// sphere
+				// the inition transformation will be from center to table layout
+				transform( targets.table, 2000 );
 
+				// sphere
 				const vector = new THREE.Vector3();
 
 				for ( let i = 0, l = objects.length; i < l; i ++ ) {
@@ -311,7 +318,6 @@
 				}
 
 				// helix
-
 				for ( let i = 0, l = objects.length; i < l; i ++ ) {
 
 					const theta = i * 0.175 + Math.PI;
@@ -332,7 +338,6 @@
 				}
 
 				// grid
-
 				for ( let i = 0; i < objects.length; i ++ ) {
 
 					const object = new THREE.Object3D();
@@ -343,6 +348,17 @@
 
 					targets.grid.push( object );
 
+				}
+
+				// random position 
+				for ( let i = 0; i < table.length; i += 5  ) {
+					const object = new THREE.Object3D(); 
+
+					object.position.x = Math.random()*4000 - 2000;
+					object.position.y = Math.random()*4000 - 2000;
+					object.position.z = Math.random()*4000 - 2000;
+
+					targets.random.push( object );
 				}
 
 				//
@@ -360,33 +376,28 @@
 
 				const buttonTable = document.getElementById( 'table' );
 				buttonTable.addEventListener( 'click', function () {
-
 					transform( targets.table, 2000 );
-
 				}, false );
 
 				const buttonSphere = document.getElementById( 'sphere' );
 				buttonSphere.addEventListener( 'click', function () {
-
 					transform( targets.sphere, 2000 );
-
 				}, false );
 
 				const buttonHelix = document.getElementById( 'helix' );
 				buttonHelix.addEventListener( 'click', function () {
-
 					transform( targets.helix, 2000 );
-
 				}, false );
 
 				const buttonGrid = document.getElementById( 'grid' );
 				buttonGrid.addEventListener( 'click', function () {
-
 					transform( targets.grid, 2000 );
-
 				}, false );
 
-				transform( targets.table, 2000 );
+				const buttonRandom = document.getElementById( 'random' );
+				buttonRandom.addEventListener( 'click', function () {
+					transform( targets.random, 2000 );
+				}, false );
 
 				//
 
