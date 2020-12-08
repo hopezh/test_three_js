@@ -6,10 +6,9 @@
 import * as THREE from 'https://threejs.org/build/three.module.js'; 
 import { TWEEN } from 'https://threejs.org/examples/jsm/libs/tween.module.min.js';
 import { TrackballControls } from 'https://threejs.org/examples/jsm/controls/TrackballControls.js';
-import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';	
+import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';
 
 
-// table : contents of each elment
 const table = [
     // "symbol", "full name", "atomic weight", column in the table, row in the table 
     "H", "Hydrogen 氫", "1.00794", 1, 1,
@@ -130,34 +129,29 @@ const table = [
     "Lv", "Livermorium", "(293)", 16, 7,
     "Ts", "Tennessine", "(294)", 17, 7,
     "Og", "Oganesson", "(294)", 18, 7
-];			
+];
 
-// init vars for elements in a scene
 let camera, scene, renderer;
 let controls;
 
-// init list of objects 
 const objects = [];
-const targets = { table: [], sphere: [], helix: [], grid: [], column: [], row: [], random: [] };
+const targets = { table: [], sphere: [], helix: [], grid: [], random: [] };
 
-// run main functions to init and animate the scene
 init();
-animate(); 
-
+animate();
 
 function init() {
 
-    camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10000 );
-    camera.position.z = 3000;
+    camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.1, 1000000 );
+    camera.position.z = 5000;
 
     scene = new THREE.Scene();
 
     // init elements 
     for ( let i = 0; i < table.length; i += 5 ) {
 
-        var element = document.createElement( 'div' );
+        const element = document.createElement( 'div' );
         element.className = 'element'; 
-        // element.style.backgroundColor = "black";
         element.style.backgroundColor = 'rgba('
                                         + (Math.random()*255) + ','
                                         + (Math.random()*255) + ','
@@ -258,30 +252,6 @@ function init() {
 
     }
 
-    // column layout
-    for ( let i = 0; i < table.length; i += 5  ) {
-        const object = new THREE.Object3D(); 
-
-        object.position.x = 0;
-        object.position.y = -i * 40 + 1500;
-        object.position.z = 0;
-        // object.position.z = Math.random()*4000 - 2000;
-
-        targets.column.push( object );
-    }
-
-    // row layout
-    for ( let i = 0; i < table.length; i += 5  ) {
-        const object = new THREE.Object3D(); 
-
-        object.position.x = i * 40 - 2000;
-        object.position.y = 0;
-        object.position.z = 0;
-        // object.position.z = Math.random()*4000 - 2000;
-
-        targets.row.push( object );
-    }
-
     // random position 
     for ( let i = 0; i < table.length; i += 5  ) {
         const object = new THREE.Object3D(); 
@@ -308,40 +278,22 @@ function init() {
 
     const buttonTable = document.getElementById( 'table' );
     buttonTable.addEventListener( 'click', function () {
-
         transform( targets.table, 2000 );
-
     }, false );
 
     const buttonSphere = document.getElementById( 'sphere' );
     buttonSphere.addEventListener( 'click', function () {
-
         transform( targets.sphere, 2000 );
-
     }, false );
 
     const buttonHelix = document.getElementById( 'helix' );
     buttonHelix.addEventListener( 'click', function () {
-
         transform( targets.helix, 2000 );
-
     }, false );
 
     const buttonGrid = document.getElementById( 'grid' );
     buttonGrid.addEventListener( 'click', function () {
-
         transform( targets.grid, 2000 );
-
-    }, false );
-
-    const buttonColumn = document.getElementById( 'column' );
-    buttonColumn.addEventListener( 'click', function () {
-        transform( targets.column, 2000 );
-    }, false );
-
-    const buttonRow = document.getElementById( 'row' );
-    buttonRow.addEventListener( 'click', function () {
-        transform( targets.row, 2000 );
     }, false );
 
     const buttonRandom = document.getElementById( 'random' );
@@ -353,7 +305,7 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
 
-    }
+}
 
 function transform( targets, duration ) {
 
@@ -365,19 +317,19 @@ function transform( targets, duration ) {
         const target = targets[ i ];
 
         new TWEEN.Tween( object.position )
-            .to( { x: target.position.x, y: target.position.y, z: target.position.z }, i/100 * duration + duration )
+            .to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
         new TWEEN.Tween( object.rotation )
-            .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, i/100  * duration + duration )
+            .to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
             .easing( TWEEN.Easing.Exponential.InOut )
             .start();
 
     }
 
     new TWEEN.Tween( this )
-        .to( {}, duration * 5 )
+        .to( {}, duration * 2 )
         .onUpdate( render )
         .start();
 
