@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 	<head>
-		<title> Testing Three.js </title>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- <link type="text/css" rel="stylesheet" href="main.css"> -->
-
+		<title>three.js css3d - periodic table</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
 		<style>
 			a {
 				color: #8ff;
@@ -27,13 +26,11 @@
 				text-align: center;
 				line-height: normal;
 				cursor: default;
-				/* background-color: red; */
 			}
 
 			.element:hover {
 				box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
-				border: 10px solid rgba(255, 255, 0, 0.7);
-				/* background-color: rgb(0, 0, 0);  */
+				border: 5px solid rgba(255, 255, 0, 0.7);
 			}
 			
 				.element .number {
@@ -80,29 +77,23 @@
 			button:active {
 				color: #000000;
 				background-color: rgba(0,255,255,0.75);
-			}	
-
+			}
 		</style>
-		
 	</head>
 
-	<body style="background-color:rgb(43, 43, 43);">
+	
+	<body style="background-color:rgb(0, 0, 0);">
 
 		<div id="info"> <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> css3d - periodic table.</div>
 		<div id="container"></div>
 		<div id="menu">
-			<button id='table'>Table</button>
-			<button id='sphere'>Sphere</button>
-			<button id='helix'>Helix</button>
-			<button id='grid'>Grid</button>
-			<button id="column">COLUMN</button>
-			<button id="row">ROW</button>
+			<button id="table">TABLE</button>
+			<button id="sphere">SPHERE</button>
+			<button id="helix">HELIX</button>
+			<button id="grid">GRID</button>
 			<button id="random">RANDOM</button>
-	
 		</div>
 
-		<script type='module' src="js/main.js"></script>
-		
+		<script type="module" src="js/main.js"></script>
 	</body>
-
 </html>
