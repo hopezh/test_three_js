@@ -8,7 +8,6 @@ import { TWEEN } from 'https://threejs.org/examples/jsm/libs/tween.module.min.js
 import { TrackballControls } from 'https://threejs.org/examples/jsm/controls/TrackballControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'https://threejs.org/examples/jsm/renderers/CSS3DRenderer.js';	
 
-
 // table : contents of each elment
 const table = [
     // "symbol", "full name", "atomic weight", column in the table, row in the table 
@@ -135,6 +134,7 @@ const table = [
 // init vars for elements in a scene
 let camera, scene, renderer;
 let controls;
+let num_input_units = 3; 
 
 // init list of objects 
 const objects = [];
@@ -151,6 +151,7 @@ function init() {
     camera.position.z = 3000;
 
     scene = new THREE.Scene();
+  
 
     // init elements 
     for ( let i = 0; i < table.length; i += 5 ) {
