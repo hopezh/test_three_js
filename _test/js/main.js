@@ -158,8 +158,12 @@ for (let i = 0; i < num_input_units; i+=1) {
 
 function init() {
 
-    camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10000 );
-    camera.position.z = 3000;
+    camera = new THREE.PerspectiveCamera( 180, window.innerWidth / window.innerHeight, 0.1, 10000 );
+    // camera = new THREE.OrthographicCamera( window.innerWidth/-2, 
+    //                                        window.innerWidth/2, 
+    //                                        window.innerHeight/-2, 
+    //                                        window.innerHeight/2, 1, 1000);
+    camera.position.z = 1000;
 
     scene = new THREE.Scene();
   
@@ -314,8 +318,8 @@ function init() {
     //
 
     controls = new TrackballControls( camera, renderer.domElement );
-    controls.minDistance = 500;
-    controls.maxDistance = 6000;
+    controls.minDistance = 10;
+    controls.maxDistance = 1000000;
     controls.addEventListener( 'change', render );
 
     const buttonTable = document.getElementById( 'table' );
