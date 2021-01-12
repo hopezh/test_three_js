@@ -5,6 +5,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
+
+		<style>
+			body { background-color: #ffffff; }
+		</style>
+
 	</head>
 
 	<body>
@@ -37,7 +42,7 @@
 			function init() {
 
 			// create renderer	
-				renderer = new THREE.WebGLRenderer();
+				renderer = new THREE.WebGLRenderer( { antialiasing: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
@@ -54,13 +59,18 @@
 
 			// create scene	
 				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0x222222 );
 				scene.add( new THREE.GridHelper( 100, 10, 0x888888, 0x444444 ) );
 			
 			// add light
 				// directional light
-				const light = new THREE.DirectionalLight( 0xffffff, 0.5 );
-				light.position.set( -1, 1, 1 );
-				scene.add( light );
+				const light1 = new THREE.DirectionalLight( 0xffffff, 0.5 );
+				light1.position.set( -1000, 1000, 1000 );
+				scene.add( light1 );
+
+				const light2 = new THREE.DirectionalLight( 0xffffff, 0.3 );
+				light1.position.set( 1000, 1000, -1000 );
+				scene.add( light2 );
 
 				// ambient light
 				scene.add( new THREE.AmbientLight( 0xffffff, 0.5 ) );
@@ -73,11 +83,32 @@
 				const geometry = new THREE.BoxBufferGeometry( 100, 100, 100 );
 				// const material = new THREE.MeshLambertMaterial( { map: texture, transparent: true } );
 
-				const meshMaterial = new THREE.MeshLambertMaterial( {
+				const meshMaterial_b = new THREE.MeshLambertMaterial( {
 					color: 0xFFFFFF,
-					opacity: 0.7,
+					opacity: 1.0,
 					transparent: false, 
 					wireframe: false, 
+				} );
+
+				const meshMaterial_c = new THREE.MeshLambertMaterial( {
+					color: 0x808080,
+					opacity: 1.0,
+					transparent: false, 
+					wireframe: false, 
+				} );
+				
+				const meshMaterial_pv = new THREE.MeshLambertMaterial( {
+					color: 0x0000ff,
+					opacity: 1.0,
+					transparent: false, 
+					wireframe: false, 
+				} );
+
+				const line_mat = new THREE.LineBasicMaterial( {
+					color: 0xffffff,
+					linewidth: 10,
+					// linecap: 'round', //ignored by WebGLRenderer
+					// linejoin:  'round' //ignored by WebGLRenderer
 				} );
 
 			// orbit control
@@ -96,22 +127,42 @@
 				// const mesh = new THREE.Mesh( geometry, meshMaterial ); // add mesh mat
 				// scene.add( mesh );
 
-			// load 3dm file
-				const loader = new Rhino3dmLoader();
-				loader.setLibraryPath( './jsm/libs/rhino3dm/' );
+			// load 3dm files
+				const loader = new Rhino3dmLoader(); 
+				loader.setLibraryPath( './jsm/libs/rhino3dm/' ); 
+
 				loader.load('./models/building.3dm', 
 							function ( object ) {
-													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial; } } ); 
+													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial_b; } } ); 
 													scene.add( object );
-													control.attach( object ); 
-													scene.add( control ); 
+													// control.attach( object ); 
+													// scene.add( control ); 
 							});	
 
 				loader.load('./models/context.3dm', 
 							function ( object ) {
-													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial; } } ); 
+													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial_c; } } ); 
 													scene.add( object );
 							});	
+
+				loader.load('./models/pv.3dm', 
+							function ( object ) {
+													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial_pv; } } ); 
+													scene.add( object );
+							});	
+
+				// loader.load('./models/result.3dm', 
+				// 			function ( object ) {
+				// 									// object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial; } } ); 
+				// 									scene.add( object );
+				// 			});	
+							
+							
+				loader.load('./models/sunpath.3dm', 
+							function ( object ) {
+													object.traverse ( function( child ) { if ( child instanceof THREE.Line ) { child.material = line_mat; } } ); 
+													scene.add( object );
+							});		
 
 			// attach transform control to mesh object 
 				// control.attach( mesh );
