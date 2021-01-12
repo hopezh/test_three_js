@@ -74,9 +74,10 @@
 				// const material = new THREE.MeshLambertMaterial( { map: texture, transparent: true } );
 
 				const meshMaterial = new THREE.MeshLambertMaterial( {
-					color: 0xffffff,
+					color: 0xFFFFFF,
 					opacity: 0.7,
-					transparent: true, 
+					transparent: false, 
+					wireframe: false, 
 				} );
 
 			// orbit control
@@ -96,15 +97,20 @@
 				// scene.add( mesh );
 
 			// load 3dm file
-			const loader = new Rhino3dmLoader();
+				const loader = new Rhino3dmLoader();
 				loader.setLibraryPath( './jsm/libs/rhino3dm/' );
-				// loader.load('https://threejs.org/examples/models/3dm/Rhino_Logo.3dm', 
-				loader.load('/models/building.3dm', 
+				loader.load('./models/building.3dm', 
 							function ( object ) {
+													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial; } } ); 
 													scene.add( object );
 													control.attach( object ); 
 													scene.add( control ); 
-													// initGUI( object.userData.layers );
+							});	
+
+				loader.load('./models/context.3dm', 
+							function ( object ) {
+													object.traverse ( function( child ) { if ( child instanceof THREE.Mesh ) { child.material = meshMaterial; } } ); 
+													scene.add( object );
 							});	
 
 			// attach transform control to mesh object 
