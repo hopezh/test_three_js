@@ -98,7 +98,8 @@
 			// load 3dm file
 			const loader = new Rhino3dmLoader();
 				loader.setLibraryPath( './jsm/libs/rhino3dm/' );
-				loader.load('https://threejs.org/examples/models/3dm/Rhino_Logo.3dm', 
+				// loader.load('https://threejs.org/examples/models/3dm/Rhino_Logo.3dm', 
+				loader.load('/models/building.3dm', 
 							function ( object ) {
 													scene.add( object );
 													control.attach( object ); 
