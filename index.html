@@ -23,12 +23,12 @@
 
 		<script type="module">
 		// import libraries
-			import * as THREE from '../build/three.module.js';
+			import * as THREE from 'https://threejs.org/build/three.module.js';
 
-			import { OrbitControls } from './jsm/controls/OrbitControls.js';
-			import { TransformControls } from './jsm/controls/TransformControls.js';
+			import { OrbitControls } from 'https://threejs.org/examples/jsm/controls/OrbitControls.js';
+			import { TransformControls } from 'https://threejs.org/examples/jsm/controls/TransformControls.js';
 
-			import { Rhino3dmLoader } from './jsm/loaders/3DMLoader.js';
+			import { Rhino3dmLoader } from 'https://threejs.org/examples/jsm/loaders/3DMLoader.js';
 
 		// init variables
 			let cameraPersp, cameraOrtho, currentCamera;
@@ -129,7 +129,7 @@
 
 			// load 3dm files
 				const loader = new Rhino3dmLoader(); 
-				loader.setLibraryPath( './jsm/libs/rhino3dm/' ); 
+				loader.setLibraryPath( '/jsm/libs/rhino3dm/' ); 
 
 				loader.load('./models/building.3dm', 
 							function ( object ) {
