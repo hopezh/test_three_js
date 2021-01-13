@@ -8,6 +8,12 @@ import { Rhino3dmLoader } from 'https://threejs.org/examples/jsm/loaders/3DMLoad
 
 import { GUI } from 'https://threejs.org/examples/jsm/libs/dat.gui.module.js';
 
+import { MTLLoader } from "https://threejs.org/examples/jsm/loaders/MTLLoader.js";
+import { MtlObjBridge } from "https://threejs.org/examples/jsm/loaders/obj2/bridge/MtlObjBridge.js";
+import { OBJLoader2 } from "https://threejs.org/examples/jsm/loaders/OBJLoader2.js";
+import { OBJLoader2Parallel } from "https://threejs.org/examples/jsm/loaders/OBJLoader2Parallel.js";
+import { LoadedMeshUserOverride } from "https://threejs.org/examples/jsm/loaders/obj2/shared/MeshReceiver.js";
+
 // init variables
 let cameraPersp, cameraOrtho, currentCamera;
 let scene, renderer, control, orbit;
@@ -46,7 +52,16 @@ function init() {
 // create scene	
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x222222 );
-    scene.add( new THREE.GridHelper( 100, 10, 0x888888, 0x444444 ) );
+    
+    const gridHelper = new THREE.GridHelper( 200, 20, 0x888888, 0x444444 ); 
+    gridHelper.position.y = -27.648109;
+    scene.add( gridHelper );
+    
+    const axesHelper = new THREE.AxesHelper( 50 );
+    axesHelper.position.x = -110; 
+    axesHelper.position.y = -27.648109; 
+    axesHelper.position.z = -110; 
+    scene.add( axesHelper );
 
 // add light
     // directional light
@@ -91,6 +106,13 @@ function init() {
         wireframe: false, 
         } );
 
+    const meshMaterial_sun = new THREE.MeshLambertMaterial( {
+        color: 0xffff00,
+        opacity: 1.0,
+        transparent: false, 
+        wireframe: false, 
+        } );    
+
     const line_mat = new THREE.LineBasicMaterial( {
         color: 0xffffff,
         linewidth: 10,
@@ -119,31 +141,31 @@ function init() {
     const loader = new Rhino3dmLoader(); 
     loader.setLibraryPath( '/jsm/libs/rhino3dm/' ); 
 
-    loader.load('./models/building.3dm', 
-                function ( object ) {
-                    object.traverse ( 
-                        function( child ) { 
-                            if ( child instanceof THREE.Mesh ) { 
-                                child.material = meshMaterial_b; 
-                            } 
-                        } 
-                    ); 
-                    scene.add( object );
-                    // control.attach( object ); 
-                    // scene.add( control ); 
-                } );	
+    // loader.load('./models/building.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.material = meshMaterial_b; 
+    //                         } 
+    //                     } 
+    //                 ); 
+    //                 scene.add( object );
+    //                 // control.attach( object ); 
+    //                 // scene.add( control ); 
+    //             } );	
 
-    loader.load('./models/context.3dm', 
-                function ( object ) {
-                    object.traverse ( 
-                        function( child ) { 
-                            if ( child instanceof THREE.Mesh ) { 
-                                child.material = meshMaterial_c; 
-                            } 
-                        } 
-                    ); 
-                    scene.add( object );
-                } );	
+    // loader.load('./models/context.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.material = meshMaterial_c; 
+    //                         } 
+    //                     } 
+    //                 ); 
+    //                 scene.add( object );
+    //             } );	
 
     // // test 
     // loader.load('./models/context.3dm', 
@@ -159,15 +181,15 @@ function init() {
     //                 scene.add( context_mesh );
     //             } );	
 
-    loader.load('./models/pv.3dm', 
-                function ( object ) {
-                    object.traverse ( 
-                        function( child ) { 
-                            if ( child instanceof THREE.Mesh ) { 
-                                child.material = meshMaterial_pv; } 
-                    } ); 
-                    scene.add( object );
-                });	
+    // loader.load('./models/pv.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.material = meshMaterial_pv; } 
+    //                 } ); 
+    //                 scene.add( object );
+    //             });	
 
     // loader.load('./models/result.3dm', 
     // 			function ( object ) {
@@ -182,17 +204,122 @@ function init() {
     //             }
     // );	
              
-    loader.load('./models/sunpath.3dm', 
-            function ( object ) {
-                object.traverse ( 
-                    function( child ) { 
-                        if ( child instanceof THREE.Line ) { 
-                            child.material = line_mat; } 
-                } ); 
-                scene.add( object );
-            });		
+    // loader.load('./models/sunpath.3dm', 
+    //         function ( object ) {
+    //             object.traverse ( 
+    //                 function( child ) { 
+    //                     if ( child instanceof THREE.Line ) { 
+    //                         child.material = line_mat; } 
+    //             } ); 
+    //             scene.add( object );
+    //         });		
 
-    
+    // loader.load('./models/terra.3dm', 
+    //         function ( object ) {
+    //             object.traverse ( 
+    //                 function( child ) { 
+    //                     if ( child instanceof THREE.Mesh ) { 
+    //                         child.material = meshMaterial_b; } 
+    //             } ); 
+    //             scene.add( object );
+    //         });	
+
+//load terra simplified model 
+
+    loader.load('./models/terra_simplified.3dm', 
+                function ( object ) {
+                    object.traverse ( 
+                        function( child ) { 
+                            if ( child instanceof THREE.Mesh ) { 
+                                child.material = meshMaterial_b; 
+                            } 
+                        } 
+                    ); 
+                    scene.add( object );
+                } );	
+
+    // loader.load('./models/terra_pv.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.geometry.translate(0, 0.1, 0); 
+    //                             child.material = meshMaterial_pv; 
+    //                         } 
+    //                     } 
+    //                 ); 
+    //                 scene.add( object );
+    //             } );
+
+    // loader.load('./models/terra_result.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.geometry.translate(0, 0.1, 0); 
+    //                             // child.material = meshMaterial_pv; 
+    //                         } 
+    //                     } 
+    //                 ); 
+    //                 scene.add( object );
+    //             } );            
+
+    // loader.load('./models/terra_sunpath.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Line ) { 
+    //                             child.material = line_mat; } 
+    //                 } ); 
+    //                 scene.add( object );
+    //             });	
+
+    // loader.load('./models/terra_sun.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.material = meshMaterial_sun; 
+    //                             // child.material.side = THREE.DoubleSide; 
+    //                         } 
+    //                 } ); 
+    //                 scene.add( object );
+    //             });	
+                
+    // loader.load('./models/terra_num.3dm', 
+    //             function ( object ) {
+    //                 object.traverse ( 
+    //                     function( child ) { 
+    //                         if ( child instanceof THREE.Mesh ) { 
+    //                             child.material = meshMaterial_b; 
+    //                             child.material.side = THREE.DoubleSide; 
+    //                         } 
+    //                 } ); 
+    //                 scene.add( object );
+    //             });	
+
+// // load obj file 
+//     const objName = 'terra';
+
+//     const objLoader2 = new OBJLoader2();
+
+//     const callbackOnLoad = function ( object3d ) {
+//         object3d.rotateX(-0.5*Math.PI);
+//         scene.add( object3d );
+//     };
+
+//     const onLoadMtl = function ( mtlParseResult ) {
+//         objLoader2.setModelName( objName );
+//         objLoader2.setLogging( true, true );
+//         objLoader2.addMaterials( MtlObjBridge.addMaterialsFromMtlLoader( mtlParseResult ), true );
+//         objLoader2.load( './models/terra_obj/texture.obj', callbackOnLoad, null, null, null );
+//     };
+
+//     const mtlLoader = new MTLLoader();
+//     mtlLoader.load( './models/terra_obj/texture.mtl', onLoadMtl );        
+
+
+
 // add event listener
     window.addEventListener( 'resize', onWindowResize, false );
 
